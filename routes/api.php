@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Auth\RegisterController;
+use App\Http\Controllers\API\TodoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,5 +21,20 @@ use App\Http\Controllers\API\Auth\RegisterController;
 //     return $request->user();
 // });
 
-Route::post('/login', [LoginController::class, 'index']);
-Route::post('/register', [RegisterController::class, 'index']);
+Route::group([
+    'prefix' => 'v1'
+], function(){
+    Route::post('/login', [LoginController::class, 'index']);
+    Route::post('/register', [RegisterController::class, 'index']);
+});
+Route::group([
+    'middleware' => 'auth:sanctum',
+    'prefix' => 'v1'
+], function(){
+    Route::get('/todo', [TodoController::class, 'showAll']);
+    Route::post('/todo/new', [TodoController::class, 'create']);
+    Route::get('/todo/{todoId}', [TodoController::class, 'detail']);
+    Route::delete('/todo/{todoId}', [TodoController::class, 'delete']);
+    Route::put('/todo/{todoId}', [TodoController::class, 'update']);
+    Route::put('/todo/{todoId}/complete', [TodoController::class, 'complete']);
+});
