@@ -11,14 +11,14 @@ use App\Models\User;
 class RegisterController extends Controller
 {
     public function index(Request $request){
-        $validate = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|unique:users|email',
             'password' => 'required'
         ]);
 
-        if($validate->fails()){
-            return response()->json($validate->errors());
+        if($validator->fails()){
+            return response()->json($validator->errors());
         }
 
         DB::beginTransaction();
